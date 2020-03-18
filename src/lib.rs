@@ -18,13 +18,14 @@ impl<'a, T, F> Future for AbortN<'a, T, F>
 where F: Future<Output=T> {
     type Output=Result<T, Aborted>;
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        if self.num_polls >= self.max_polls {
+        let mut me = Pin::into_inner(self);
+        if me.num_polls >= me.max_polls {
             return Poll::Ready(Err(Aborted {
-                num_polls: self.num_polls
+                num_polls: me.num_polls
             }));
         }
-        self.get_mut().num_polls += 1;
-        match self.future.poll(cx) {
+        me.num_polls += 1;
+        match me.future.poll(cx) {
             Poll::Ready(v) => Poll::Ready(Ok(v)),
             Poll::Pending => Poll::Pending
         }
