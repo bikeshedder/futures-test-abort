@@ -90,7 +90,7 @@
 //!     pub fn increment_count(&self) -> IncrementGuard<'_> {
 //!         // Instead of providing a `decrement_count` method an
 //!         // `IncrementGuard` is returned which takes care of decrementing
-//!         // the count when it is dropped. This makes it possilbe to clean
+//!         // the count when it is dropped. This makes it possible to clean
 //!         // up the state even when the future is aborted.
 //!         self.count.fetch_add(1, Ordering::Relaxed);
 //!         IncrementGuard { state: self }
